@@ -1,1 +1,11 @@
-.venv
+# python artifacts
+*.venv
+__pycache__/
+*.pyc
+
+# IDE settings
+*.idea
+*.vscode
+
+# because you spam the "git add ." command
+*.DS_Store
