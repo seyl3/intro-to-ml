@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..utils import get_n_classes, label_to_onehot, onehot_to_label
+from ..utils import get_n_classes, label_to_onehot
 
 
 class LogisticRegression(object):
@@ -32,23 +32,19 @@ class LogisticRegression(object):
             pred_labels (np.array): target of shape (N,)
         """
         D = training_data.shape[1]
-        C = training_labels.shape[1]
+        C = get_n_classes(training_labels)
+        training_labels_onehot = label_to_onehot(training_labels, C)
         self.W = np.random.normal(0, 0.1, (D, C))
         for it in range(self.max_iters):
-            gradient = self._gradient(training_data, training_labels)
-            weights = weights - self.lr * gradient
+            gradient = self._gradient(training_data, training_labels_onehot)
+            self.W = self.W - self.lr * gradient
 
             pred_labels = self.predict(training_data)
-            if self._acc(pred_labels, np.argmax(training_labels, axis=1)) == 100:
+            if self._acc(pred_labels, training_labels) == 100:
                 break
-            #logging and plotting
-        #    if print_period and it % print_period == 0:
-         #       print('loss at iteration', it, ":", loss_logistic_multi(training_data, training_labels, weights))
-         #   if plot_period and it % plot_period == 0:
-         #       fig = helpers.visualize_predictions(data=training_data, labels_gt=helpers.onehot_to_label(ltraining_abels), labels_pred=predictions, title="iteration "+ str(it))
-                
-        #fig = helpers.visualize_predictions(data=training_data, labels_gt=helpers.onehot_to_label(training_labels), labels_pred=predictions, title="final model")
-
+            
+        if self.max_iters == 0:
+            pred_labels = self.predict(training_data)
 
         return pred_labels
 
@@ -63,26 +59,23 @@ class LogisticRegression(object):
         """
         if (self.W is None): raise ValueError("Model has not been trained yet")
 
-        pred_labels = np.argmax(self._softmax(test_data, self.W), axis=1)
+        pred_labels = np.argmax(self._softmax(test_data), axis=1)
 
-        ##
-        ###
-        #### WRITE YOUR CODE HERE!
-        ###
-        ##
         return pred_labels
 
     def _softmax(self, data):
-        e = np.exp(data @ self.W)
-        return e / np.sum(e, axis=1)[:, np.newaxis]
+        scores = data @ self.W
+        scores = scores - np.max(scores, axis=1, keepdims=True)
+        e = np.exp(scores)
+        return e / np.sum(e, axis=1, keepdims=True)
 
     def _loss(self, data, labels):
-        return -np.sum(labels * np.log(self._softmax(data)))
+        probs = self._softmax(data)
+        return -np.mean(np.sum(labels * np.log(probs + 1e-12), axis=1))
 
     def _gradient(self, data, labels):
-        return data.T @ (self._softmax(data, self.W) - labels)
+        N = data.shape[0]
+        return data.T @ (self._softmax(data) - labels) / N
     
     def _acc(self, labels_pred, labels_gt):
-        diff = np.count_nonzero(labels_gt - labels_pred)
-        correct = np.shape(labels_pred)[0] - diff
-        return correct / np.shape(labels_gt)[0] * 100
+        return np.mean(labels_pred == labels_gt) * 100
