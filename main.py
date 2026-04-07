@@ -38,6 +38,7 @@ def main(args):
     #  normalize, add bias, etc.
 
     if not args.test:
+        #training/validation split if there is no "--test" flag
         indices = np.random.permutation(len(train_features))
         split = int(0.8 * len(train_features))
         train_idx, val_idx = indices[:split], indices[split:]
@@ -50,7 +51,10 @@ def main(args):
         train_labels_reg = train_labels_reg[train_idx]
         train_labels_classif = train_labels_classif[train_idx]
 
-    ### WRITE YOUR CODE HERE to do any other data processing
+    means = train_features.mean(axis=0, keepdims=True)
+    stds  = train_features.std(axis=0, keepdims=True)
+    train_features = normalize_fn(train_features, means, stds)
+    test_features  = normalize_fn(test_features, means, stds)
 
     ## 3. Initialize the method you want to use.
 
@@ -98,17 +102,8 @@ def main(args):
         print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
 
         print("=======================")
-
-        train_mse = mse_fn(preds_train, train_labels_reg)
-        print(f"\nTrain set: MSE = {train_mse:.6f}")
-
-        test_mse = mse_fn(preds, test_labels_reg)
-        print(f"Test set:  MSE = {test_mse:.6f}")
-
-        print("=======================")
-
-        print("Linear Regression training takes", train_end-train_start, "seconds")
-        print("Linear Regression predicting takes", pred_end-pred_start, "seconds")
+        print("Training takes", train_end-train_start, "seconds")
+        print("Predicting takes", pred_end-pred_start, "seconds")
 
 
 
