@@ -1,4 +1,5 @@
 import numpy as np
+from src.utils import append_bias_term
 
 
 class LinearRegression(object):
@@ -24,7 +25,7 @@ class LinearRegression(object):
         Returns:
             pred_labels (np.array): target of shape (N,)
         """
-        X = np.hstack([np.ones((training_data.shape[0], 1)), training_data])
+        X = append_bias_term(training_data)
         self.W = np.linalg.pinv(X) @ training_labels # or equivalently np.linalg.lstsq(X, training_labels, rcond=None)[0]
 
         pred_labels = X @ self.W
@@ -40,7 +41,7 @@ class LinearRegression(object):
             pred_labels (np.array): labels of shape (N,)
         """
         assert hasattr(self, 'W'), "The model not trained yet! You need to call fit() first"
-        X = np.hstack([np.ones((test_data.shape[0], 1)), test_data])
+        X = append_bias_term(test_data)
 
         pred_labels = X @ self.W
         return pred_labels
