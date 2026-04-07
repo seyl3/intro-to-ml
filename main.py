@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import time
 
 from src.methods.dummy_methods import DummyClassifier
 from src.methods.logistic_regression import LogisticRegression
@@ -36,10 +37,18 @@ def main(args):
     ## 2. Then we must prepare it. This is where you can create a validation set,
     #  normalize, add bias, etc.
 
-    # Make a validation set (it can overwrite xtest, ytest)
     if not args.test:
-        ### WRITE YOUR CODE HERE
-        pass
+        indices = np.random.permutation(len(train_features))
+        split = int(0.8 * len(train_features))
+        train_idx, val_idx = indices[:split], indices[split:]
+
+        test_features = train_features[val_idx]
+        test_labels_reg = train_labels_reg[val_idx]
+        test_labels_classif = train_labels_classif[val_idx]
+
+        train_features = train_features[train_idx]
+        train_labels_reg = train_labels_reg[train_idx]
+        train_labels_classif = train_labels_classif[train_idx]
 
     ### WRITE YOUR CODE HERE to do any other data processing
 
@@ -58,7 +67,7 @@ def main(args):
         pass
 
     elif args.method == "linear_regression":
-        ### WRITE YOUR CODE HERE
+        method_obj = LinearRegression()
         pass
 
     else:
@@ -69,10 +78,15 @@ def main(args):
     if args.task == "classification":
         assert args.method != "linear_regression", f"You should use linear regression as a regression method"
         # Fit the method on training data
+        train_start = time.time()
         preds_train = method_obj.fit(train_features, train_labels_classif)
+        train_end = time.time()
+
 
         # Predict on unseen data
+        pred_start = time.time()
         preds = method_obj.predict(test_features)
+        pred_end = time.time()
 
         # Report results: performance on train and valid/test sets
         acc = accuracy_fn(preds_train, train_labels_classif)
@@ -83,13 +97,32 @@ def main(args):
         macrof1 = macrof1_fn(preds, test_labels_classif)
         print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
 
+        print("=======================")
+
+        train_mse = mse_fn(preds_train, train_labels_reg)
+        print(f"\nTrain set: MSE = {train_mse:.6f}")
+
+        test_mse = mse_fn(preds, test_labels_reg)
+        print(f"Test set:  MSE = {test_mse:.6f}")
+
+        print("=======================")
+
+        print("Linear Regression training takes", train_end-train_start, "seconds")
+        print("Linear Regression predicting takes", pred_end-pred_start, "seconds")
+
+
+
     elif args.task == "regression":
         assert args.method != "logistic_regression", f"You should use logistic regression as a classification method"
         # Fit the method on training data
+        train_start = time.time()
         preds_train = method_obj.fit(train_features, train_labels_reg)
+        train_end = time.time()
 
         # Predict on unseen data
+        pred_start = time.time()
         preds = method_obj.predict(test_features)
+        pred_end = time.time()
 
         # Report results: MSE on train and valid/test sets
         train_mse = mse_fn(preds_train, train_labels_reg)
@@ -97,6 +130,12 @@ def main(args):
 
         test_mse = mse_fn(preds, test_labels_reg)
         print(f"Test set:  MSE = {test_mse:.6f}")
+
+        print("=======================")
+
+        print("Linear Regression training takes", train_end-train_start, "seconds")
+        print("Linear Regression predicting takes", pred_end-pred_start, "seconds")
+
 
     else:
         raise ValueError(f"Unknown task: {args.task}")
