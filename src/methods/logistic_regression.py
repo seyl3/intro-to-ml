@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..utils import get_n_classes, label_to_onehot, append_bias_term
+from ..utils import get_n_classes, label_to_onehot, append_bias_term, visualize_end, visualize_setup, visualize_update
 
 
 class LogisticRegression(object):
@@ -39,14 +39,7 @@ class LogisticRegression(object):
 
         losses = []
         if visualize:
-            import matplotlib.pyplot as plt
-
-            plt.ion()
-            _, ax = plt.subplots()
-            line, = ax.plot([], [])
-            ax.set_xlabel("Iteration")
-            ax.set_ylabel("Loss")
-            ax.set_title("Training loss")
+            ax, line = visualize_setup()
 
         for i in range(self.max_iters):
             gradient = self._gradient(biased_training_data, training_labels_onehot)
@@ -56,12 +49,8 @@ class LogisticRegression(object):
             losses.append(loss)
 
             if visualize:
-                line.set_xdata(range(len(losses)))
-                line.set_ydata(losses)
-                ax.relim()
-                ax.autoscale_view()
-                plt.draw()
-                plt.pause(0.01)
+                visualize_update(ax, line, losses)
+
 
             pred_labels = np.argmax(self._softmax(biased_training_data), axis=1)
             if self._acc(pred_labels, training_labels) == 100:
@@ -71,8 +60,7 @@ class LogisticRegression(object):
             pred_labels = np.argmax(self._softmax(biased_training_data), axis=1)
 
         if visualize:
-            plt.ioff()
-            plt.draw()
+            visualize_end()
 
         return pred_labels
 
