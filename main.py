@@ -69,7 +69,7 @@ def main(args):
     if args.task == "classification":
         assert args.method != "linear_regression", f"You should use linear regression as a regression method"
         # Fit the method on training data
-        preds_train = method_obj.fit(train_features, train_labels_classif)
+        preds_train = method_obj.fit(train_features, train_labels_classif, args.visualize)
 
         # Predict on unseen data
         preds = method_obj.predict(test_features)
@@ -86,7 +86,7 @@ def main(args):
     elif args.task == "regression":
         assert args.method != "logistic_regression", f"You should use logistic regression as a classification method"
         # Fit the method on training data
-        preds_train = method_obj.fit(train_features, train_labels_reg)
+        preds_train = method_obj.fit(train_features, train_labels_reg, args.visualize)
 
         # Predict on unseen data
         preds = method_obj.predict(test_features)
@@ -147,6 +147,11 @@ if __name__ == "__main__":
         action="store_true",
         help="train on whole training data and evaluate on the test data, "
              "otherwise use a validation set",
+    )
+    parser.add_argument(
+        "--visualize",
+        action="store_true",
+        help="enable visualization",
     )
     # Feel free to add more arguments here if you need!
 

@@ -21,7 +21,7 @@ class LogisticRegression(object):
         self.max_iters = max_iters
         self.W = None
 
-    def fit(self, training_data, training_labels):
+    def fit(self, training_data, training_labels, visualize=False):
         """
         Trains the model, returns predicted labels for training data.
 
