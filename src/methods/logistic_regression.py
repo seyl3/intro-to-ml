@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..utils import get_n_classes, label_to_onehot, onehot_to_label
+from ..utils import get_n_classes, label_to_onehot, append_bias_term, visualize_end, visualize_setup, visualize_update
 
 
 class LogisticRegression(object):
@@ -19,22 +19,49 @@ class LogisticRegression(object):
         """
         self.lr = lr
         self.max_iters = max_iters
+        self.W = None
 
-    def fit(self, training_data, training_labels):
+    def fit(self, training_data, training_labels, visualize=False):
         """
         Trains the model, returns predicted labels for training data.
 
         Arguments:
             training_data (np.array): training data of shape (N,D)
-            training_labels (np.array): regression target of shape (N,)
+            training_labels (np.array): labels of shape (N,)
         Returns:
             pred_labels (np.array): target of shape (N,)
         """
-        ##
-        ###
-        #### WRITE YOUR CODE HERE!
-        ###
-        ##
+        biased_training_data = append_bias_term(training_data)
+        D = biased_training_data.shape[1]
+        C = get_n_classes(training_labels)
+        training_labels_onehot = label_to_onehot(training_labels, C)
+        self.W = np.zeros((D, C))
+
+        losses = []
+        if visualize:
+            ax, line = visualize_setup()
+
+        for i in range(self.max_iters):
+            gradient = self._gradient(biased_training_data, training_labels_onehot)
+            self.W = self.W - self.lr * gradient
+
+            loss = self._loss(biased_training_data, training_labels_onehot)
+            losses.append(loss)
+
+            if visualize:
+                visualize_update(ax, line, losses)
+
+
+            pred_labels = np.argmax(self._softmax(biased_training_data), axis=1)
+            if self._acc(pred_labels, training_labels) == 100:
+                break
+            
+        if self.max_iters == 0:
+            pred_labels = np.argmax(self._softmax(biased_training_data), axis=1)
+
+        if visualize:
+            visualize_end()
+
         return pred_labels
 
     def predict(self, test_data):
@@ -46,9 +73,26 @@ class LogisticRegression(object):
         Returns:
             pred_labels (np.array): labels of shape (N,)
         """
-        ##
-        ###
-        #### WRITE YOUR CODE HERE!
-        ###
-        ##
+        if (self.W is None): raise ValueError("Model has not been trained yet")
+        test_data = append_bias_term(test_data)
+
+        pred_labels = np.argmax(self._softmax(test_data), axis=1)
+
         return pred_labels
+
+    def _softmax(self, data):
+        scores = data @ self.W
+        scores = scores - np.max(scores, axis=1, keepdims=True)
+        e = np.exp(scores)
+        return e / np.sum(e, axis=1, keepdims=True)
+
+    def _loss(self, data, labels):
+        probs = self._softmax(data)
+        return -np.mean(np.sum(labels * np.log(probs + 1e-12), axis=1))
+
+    def _gradient(self, data, labels):
+        N = data.shape[0]
+        return data.T @ (self._softmax(data) - labels) / N
+    
+    def _acc(self, labels_pred, labels_gt):
+        return np.mean(labels_pred == labels_gt) * 100

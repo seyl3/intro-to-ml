@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # General utilities
@@ -126,3 +127,25 @@ def mse_fn(pred, gt):
     loss = (pred - gt) ** 2
     loss = np.mean(loss)
     return loss
+
+def visualize_setup():
+    plt.ion()
+    _, ax = plt.subplots()
+    line, = ax.plot([], [])
+    ax.set_xlabel("Iteration")
+    ax.set_ylabel("Loss")
+    ax.set_title("Training loss")
+
+    return ax, line
+
+def visualize_update(ax, line, losses):
+    line.set_xdata(range(len(losses)))
+    line.set_ydata(losses)
+    ax.relim()
+    ax.autoscale_view()
+    plt.draw()
+    plt.pause(0.01)
+
+def visualize_end():
+    plt.ioff()
+    plt.draw()

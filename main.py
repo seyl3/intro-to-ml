@@ -67,7 +67,7 @@ def main(args):
         pass
 
     elif args.method == "logistic_regression":
-        ### WRITE YOUR CODE HERE
+        method_obj = LogisticRegression(args.lr, args.max_iters)
         pass
 
     elif args.method == "linear_regression":
@@ -83,7 +83,7 @@ def main(args):
         assert args.method != "linear_regression", f"You should use linear regression as a regression method"
         # Fit the method on training data
         train_start = time.time()
-        preds_train = method_obj.fit(train_features, train_labels_classif)
+        preds_train = method_obj.fit(train_features, train_labels_classif, args.visualize)
         train_end = time.time()
 
 
@@ -95,11 +95,11 @@ def main(args):
         # Report results: performance on train and valid/test sets
         acc = accuracy_fn(preds_train, train_labels_classif)
         macrof1 = macrof1_fn(preds_train, train_labels_classif)
-        print(f"\nTrain set: accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
+        print(f"\nTrain set: accuracy = {acc:.3f}%, F1-score = {macrof1:.6f}")
 
         acc = accuracy_fn(preds, test_labels_classif)
         macrof1 = macrof1_fn(preds, test_labels_classif)
-        print(f"Test set:  accuracy = {acc:.3f}% - F1-score = {macrof1:.6f}")
+        print(f"Test set:  accuracy = {acc:.3f}%,  F1-score = {macrof1:.6f}")
 
         print("=======================")
         print("Training takes", train_end-train_start, "seconds")
@@ -111,7 +111,7 @@ def main(args):
         assert args.method != "logistic_regression", f"You should use logistic regression as a classification method"
         # Fit the method on training data
         train_start = time.time()
-        preds_train = method_obj.fit(train_features, train_labels_reg)
+        preds_train = method_obj.fit(train_features, train_labels_reg, args.visualize)
         train_end = time.time()
 
         # Predict on unseen data
@@ -134,6 +134,11 @@ def main(args):
 
     else:
         raise ValueError(f"Unknown task: {args.task}")
+
+    if args.visualize and args.method == "logistic_regression":
+        import matplotlib.pyplot as plt
+
+        plt.show()
 
     ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
 
@@ -181,6 +186,11 @@ if __name__ == "__main__":
         action="store_true",
         help="train on whole training data and evaluate on the test data, "
              "otherwise use a validation set",
+    )
+    parser.add_argument(
+        "--visualize",
+        action="store_true",
+        help="enable visualization",
     )
     # Feel free to add more arguments here if you need!
 

@@ -9,3 +9,4 @@ __pycache__/
 
 # because you spam the "git add ." command
 *.DS_Store
+todo.md
