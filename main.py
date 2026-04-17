@@ -63,8 +63,8 @@ def main(args):
         method_obj = DummyClassifier(arg1=1, arg2=2)
 
     elif args.method == "knn":
-        ### WRITE YOUR CODE HERE
-        pass
+        # On passe le paramètre k et le type de tâche (classification ou régression)
+        method_obj = KNN(k=args.K, task_kind=args.task)
 
     elif args.method == "logistic_regression":
         method_obj = LogisticRegression(args.lr, args.max_iters)
@@ -128,8 +128,8 @@ def main(args):
 
         print("=======================")
 
-        print("Linear Regression training takes", train_end-train_start, "seconds")
-        print("Linear Regression predicting takes", pred_end-pred_start, "seconds")
+        print(f"{args.method} training takes", train_end-train_start, "seconds")
+        print(f"{args.method} predicting takes", pred_end-pred_start, "seconds")
 
 
     else:
