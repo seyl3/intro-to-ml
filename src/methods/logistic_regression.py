@@ -51,7 +51,6 @@ class LogisticRegression(object):
             if visualize:
                 visualize_update(ax, line, losses)
 
-
             pred_labels = np.argmax(self._softmax(biased_training_data), axis=1)
             if self._acc(pred_labels, training_labels) == 100:
                 break

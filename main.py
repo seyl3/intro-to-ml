@@ -6,7 +6,7 @@ from src.methods.dummy_methods import DummyClassifier
 from src.methods.logistic_regression import LogisticRegression
 from src.methods.linear_regression import LinearRegression
 from src.methods.knn import KNN
-from src.utils import normalize_fn, append_bias_term, accuracy_fn, macrof1_fn, mse_fn
+from src.utils import normalize_fn, accuracy_fn, macrof1_fn, mse_fn
 import os
 
 np.random.seed(100)
@@ -68,11 +68,9 @@ def main(args):
 
     elif args.method == "logistic_regression":
         method_obj = LogisticRegression(args.lr, args.max_iters)
-        pass
 
     elif args.method == "linear_regression":
         method_obj = LinearRegression()
-        pass
 
     else:
         raise ValueError(f"Unknown method: {args.method}")
