@@ -1,5 +1,5 @@
 import numpy as np
-from src.utils import append_bias_term
+from milestone_1.src.utils import append_bias_term
 
 
 class LinearRegression(object):

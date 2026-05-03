@@ -1,6 +1,6 @@
 """
 Module for auto-testing student projects.
-This is the Milestone 1 version.
+This is the Milestone 2 version.
 """
 
 import re
@@ -54,13 +54,13 @@ class TestProject(unittest.TestCase):
         # Source code
         src_path = project_path / "src"
         self.assertTrue(src_path.exists(), f"{src_path} not found")
-        for file in ["__init__.py", "utils.py"]:
+        for file in ["__init__.py", "utils.py", "losses.py", "activations.py"]:
             with self.subTest(f"Checking file src/{file}"):
                 self.assertTrue((src_path / file).exists(), f"No file {file} found at {src_path}")
         # Methods
         method_path = src_path / "methods"
         self.assertTrue(method_path.exists(), f"{method_path} not found")
-        for file in ["__init__.py", "dummy_methods.py", "logistic_regression.py", "knn.py", "linear_regression.py"]:
+        for file in ["__init__.py", "dummy_methods.py", "mlp.py", "kmeans.py"]:
             with self.subTest(f"Checking file methods/{file}"):
                 self.assertTrue((method_path / file).exists(), f"No file {file} found at {method_path}")
 
@@ -99,66 +99,42 @@ class TestProject(unittest.TestCase):
         _ = self._import_and_test("dummy_methods", "DummyClassifier",
                                   arg1=1)
 
-    def test_3a_knn(self):
-        """Test KNN."""
-        self.title("Testing KNN")
+    def test_3a_kmeans(self):
+        """Test K-Means."""
+        self.title("Testing K-Means")
 
-        knn_model = self._import_and_test("knn", "KNN", k=1)
+        self._import_and_test("kmeans", "KMeans", K=3)
 
-        #  Test on easy dummy data
-        training_data = np.array([[0., 0.], [1., 0.], [0., 1.], [1., 1.]])
-        training_labels = np.array([0, 1, 2, 3])
-        test_data = np.array([[0., 0.1], [1.2, -0.2], [0.1, 0.9], [20., 20.]])
-        test_labels = np.array([0, 1, 2, 3])
+    def test_3b_mlp(self):
+        """Test MLP."""
+        self.title("Testing MLP")
+
+        from src.methods.mlp import MLP
+        from src.activations import Sigmoid
+        from src.losses import MSE
+
+        N, D, C = 20, 3, 2
+        mlp = MLP(dimensions=(D, 10, C), activations=(Sigmoid, Sigmoid))
+
+        for fn in ["fit", "predict", "feed_forward", "back_prop"]:
+            self.assertTrue(hasattr(mlp, fn), f"MLP should have a '{fn}' method")
+
+        training_data = np.random.rand(N, D)
+        training_labels = np.random.randint(0, C, N)
+        y_one_hot = np.zeros((N, C))
+        y_one_hot[np.arange(N), training_labels] = 1
+        test_data = np.random.rand(N, D)
+
         with no_print():
-            pred_labels_train = knn_model.fit(training_data, training_labels)
-            pred_labels_test = knn_model.predict(test_data)
-        self.assertTrue(np.equal(pred_labels_train, training_labels).all(), f"KNN.fit() is not working on dummy data")
-        self.assertTrue(np.equal(pred_labels_test, test_labels).all(), f"KNN.predict() is not working on dummy data")
+            mlp.fit(training_data, y_one_hot, loss=MSE, epochs=5, batch_size=5)
 
-    def test_3b_logistic_regression(self):
-        """Test Logistic Regression."""
-        self.title("Testing Logistic Regression")
-
-        logistic_regression = self._import_and_test("logistic_regression", "LogisticRegression",
-                                                    lr=1e-3, max_iters=500)
-
-        #  Test on easy dummy data
-        N = 20
-        training_data = np.concatenate([
-            np.linspace(-5, -0.25, N // 2)[:, None],
-            np.linspace(0.25, 5, N // 2)[:, None]
-        ], axis=0)
-        training_labels = (training_data[:, 0] > 0.).astype(int)
-        test_data = np.array([-10., -5., -1., 1., 5., 10.])[:, None]
-        test_labels = (test_data[:, 0] > 0.).astype(int)
         with no_print():
-            pred_labels_train = logistic_regression.fit(training_data, training_labels)
-            pred_labels_test = logistic_regression.predict(test_data)
-        self.assertTrue((pred_labels_train == training_labels).all(),
-                        f"LogisticRegression.fit() is not working on dummy data")
-        self.assertTrue((pred_labels_test == test_labels).all(),
-                        f"LogisticRegression.predict() is not working on dummy data")
+            pred = mlp.predict(test_data)
 
-    def test_3c_linear_regression(self):
-        """Test Linear Regression."""
-        self.title("Testing Linear Regression")
-
-        LR_model = self._import_and_test("linear_regression", "LinearRegression")
-
-        #  Test on easy dummy data
-        N = 20
-        training_data = np.linspace(-1, 1, N)[:, None]
-        training_labels = 2 * training_data[:, 0]
-        test_data = np.random.rand(N, 1) * 2 - 1
-        test_labels = 2 * test_data[:, 0]
-        with no_print():
-            pred_labels_train = LR_model.fit(training_data, training_labels)
-            pred_labels_test = LR_model.predict(test_data)
-        self.assertTrue(np.isclose(pred_labels_train, training_labels).all(),
-                        f"LinearRegression.fit() is not working on dummy data")
-        self.assertTrue(np.isclose(pred_labels_test, test_labels).all(),
-                        f"LinearRegression.predict() is not working on dummy data")
+        self.assertIsInstance(pred, np.ndarray,
+                              f"MLP.predict() should output an array, not {type(pred)}")
+        self.assertEqual(pred.shape, (N, C),
+                         f"MLP.predict() output has wrong shape ({pred.shape} != {(N, C)})")
 
 
 def warn(msg):
