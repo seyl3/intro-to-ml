@@ -39,10 +39,34 @@ def main(args):
 
     # Make a validation set (it can overwrite xtest, ytest)
     if not args.test:
-        ### WRITE YOUR CODE HERE
-        pass
+        # simple train/validation split (80/20)
+        n = train_features.shape[0]
+        idx = np.random.permutation(n)
+        split = int(0.8 * n)
 
-    ### WRITE YOUR CODE HERE to do any other data processing
+        train_idx, val_idx = idx[:split], idx[split:]
+
+        val_features = train_features[val_idx]
+        val_labels_reg = train_labels_reg[val_idx]
+        val_labels_classif = train_labels_classif[val_idx]
+
+        train_features = train_features[train_idx]
+        train_labels_reg = train_labels_reg[train_idx]
+        train_labels_classif = train_labels_classif[train_idx]
+
+    # Normalize features (fit on train, apply to others)
+    train_features, mean, std = normalize_fn(train_features)
+    test_features = (test_features - mean) / std
+
+    if not args.test:
+        val_features = (val_features - mean) / std
+
+    # Add bias term
+    train_features = append_bias_term(train_features)
+    test_features = append_bias_term(test_features)
+
+    if not args.test:
+        val_features = append_bias_term(val_features)
 
     ## 3. Initialize the method you want to use.
 

@@ -1,3 +1,5 @@
+import numpy as np
+
 class MSE:
     @staticmethod
     def loss(y_true, y_pred):
@@ -6,9 +8,10 @@ class MSE:
         :param y_pred: (array) Prediction vector
         :return: (flt)
         """
-        ### WRITE YOUR CODE HERE
+        N = y_pred.size
+        return 1/N * np.sum((y_pred - y_true)**2)
 
     @staticmethod
     def gradient(y_true, y_pred):
-        ### WRITE YOUR CODE HERE
-        return
+        N = y_pred.size
+        return (2 / N) * (y_pred - y_true)
