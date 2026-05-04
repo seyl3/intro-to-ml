@@ -68,6 +68,11 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
+        
+        _, activations = self.feed_forward(x)
+        
+        # renvoie de la dernière couche uniquement
+        return activations[len(self.weights)]
 
 
     def back_prop(self, z, a, y_true, loss):
