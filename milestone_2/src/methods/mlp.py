@@ -45,6 +45,20 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
+        
+         # couche 0 -> données d'entrée
+        a = {0: x}
+        z = {}
+
+        # parcourt de chaque transition entre les couches
+        for i in range(len(self.weights)):
+            # pré-activation
+            z[i+1] = a[i] @ self.weights[i] + self.biases[i]
+            
+            # activation
+            a[i+1] = self.activations[i].forward(z[i+1])
+
+        return z, a
 
 
     def predict(self, x):
