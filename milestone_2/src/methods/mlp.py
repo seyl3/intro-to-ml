@@ -90,6 +90,26 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
+        
+        dw = {}
+        db = {}
+        deltas = {}
+        L = len(self.weights)
+        
+        # erreur à la sortie
+        output_pred = a[L]
+        deltas[L] = loss.gradient(y_true, output_pred) * self.activations[L-1].gradient(z[L])
+
+        # rétropropagation de l'erreur dans les couches cachées
+        for i in range(L - 1, 0, -1):
+            deltas[i] = (deltas[i+1] @ self.weights[i].T) * self.activations[i-1].gradient(z[i])
+
+        # Calcul des gradients dw et db pondérés par la taille du batch
+        for i in range(L):
+            dw[i] = (a[i].T @ deltas[i+1]) / a[i].shape[0]
+            db[i] = np.mean(deltas[i+1], axis=0, keepdims=True)
+
+        return dw, db
 
 
     def update_w_b(self, index, dw, delta):
