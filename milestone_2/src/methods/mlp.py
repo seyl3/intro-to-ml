@@ -112,7 +112,7 @@ class MLP:
         return dw, db
 
 
-    def update_w_b(self, index, dw, delta):
+    def update_w_b(self, index, dw, db, learning_rate):
         """
         Update weights and biases.
         :param index: (int) Number of the layer
@@ -121,7 +121,10 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
-
+        
+        self.weights[index] -= learning_rate * dw
+        self.biases[index] -= learning_rate * db
+        
     def fit(self, x, y_true, loss, epochs, batch_size, learning_rate=1e-3):
         """
         :param x: (array) Containing parameters
@@ -133,3 +136,25 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
+        
+        n_samples = x.shape[0]
+        
+        for epoch in range(epochs):
+            indices = np.random.permutation(n_samples)
+            x_shuffled = x[indices]
+            y_shuffled = y_true[indices]
+            
+            # parcours par mini batch
+            for i in range(0, n_samples, batch_size):
+                x_batch = x_shuffled[i:i + batch_size]
+                y_batch = y_shuffled[i:i + batch_size]
+                
+                # calcul des activations
+                z, a = self.feed_forward(x_batch)
+                
+                # calcul des gradients
+                dw, db = self.back_prop(z, a, y_batch, loss)
+                
+                # Mise à jour de chaque couche
+                for layer_idx in range(len(self.weights)):
+                    self.update_w_b(layer_idx, dw[layer_idx], db[layer_idx], learning_rate)
