@@ -17,6 +17,25 @@ class MLP:
         """
 
         ### WRITE YOUR CODE HERE
+        
+        self.dimensions = dimensions
+        self.activations = activations
+        
+        self.weights = []
+        self.biases = []
+        
+        # pour créer les connexions
+        for i in range(len(dimensions) - 1):
+            n_in = dimensions[i]
+            n_out = dimensions[i+1]
+            
+            # initialisation aléatoire des poids
+            w = np.random.randn(n_in, n_out) * np.sqrt(1.0 / n_in)
+            self.weights.append(w)
+            
+            # un biais par neurone de sortie
+            b = np.zeros((1, n_out))
+            self.biases.append(b)
 
     def feed_forward(self, x):
         """
