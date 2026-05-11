@@ -1,6 +1,6 @@
 import numpy as np
 
-from milestone_1.src.utils import mse_fn
+from src.utils import mse_fn
 
 
 class MSE:
