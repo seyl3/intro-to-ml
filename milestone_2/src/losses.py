@@ -1,5 +1,8 @@
 import numpy as np
 
+from milestone_1.src.utils import mse_fn
+
+
 class MSE:
     @staticmethod
     def loss(y_true, y_pred):
@@ -9,7 +12,7 @@ class MSE:
         :return: (flt)
         """
         N = y_pred.size
-        return 1/N * np.sum((y_pred - y_true)**2)
+        return mse_fn(y_pred, y_true)
 
     @staticmethod
     def gradient(y_true, y_pred):
