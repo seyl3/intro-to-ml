@@ -6,7 +6,7 @@ from src.methods.mlp import MLP
 from src.losses import MSE
 from src.activations import Sigmoid, ReLU
 from src.methods.kmeans import KMeans
-from src.utils import normalize_fn, append_bias_term, accuracy_fn, macrof1_fn, mse_fn
+from src.utils import normalize_fn, append_bias_term, accuracy_fn, macrof1_fn, mse_fn, get_n_classes,onehot_to_label, label_to_onehot
 import os
 
 np.random.seed(100)
@@ -80,6 +80,20 @@ def main(args):
 
     elif args.method == "mlp":
         ### WRITE YOUR CODE HERE
+        n_features = train_features.shape[1]
+        n_classes = get_n_classes(train_labels_classif)
+
+        hidden_layers = [int(x) for x in args.mlp_dim.split(',')]
+        
+        dimensions = (n_features, *hidden_layers, n_classes)
+
+        act_fn = ReLU if args.activation == "relu" else Sigmoid
+        
+        activations = [act_fn] * (len(dimensions) - 1)
+
+        print(f"Initialisation MLP avec dimensions: {dimensions} et activation: {args.activation}")
+        method_obj = MLP(dimensions=dimensions, activations=activations)
+        
         pass
     else:
         raise ValueError(f"Unknown method: {args.method}")
@@ -89,6 +103,19 @@ def main(args):
     if args.task == "classification":
 
         ### WRITE YOUR CODE HERE
+        if args.method == "mlp":
+            Y_train_oh = label_to_onehot(train_labels_classif)
+
+            print("entraînement du MLP en cours")
+            method_obj.fit(train_features, Y_train_oh, loss=MSE, 
+                           epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
+
+            #choisit val ou test selon le flag --test
+            data_to_pred = test_features if args.test else val_features
+            preds_oh = method_obj.predict(data_to_pred)
+            
+            preds = onehot_to_label(preds_oh)
+        
         pass
 
     elif args.task == "regression":
@@ -144,6 +171,19 @@ if __name__ == "__main__":
              "otherwise use a validation set",
     )
     # Feel free to add more arguments here if you need!
-
+    parser.add_argument(
+        "--mlp_dim",
+        type=str,
+        default="64,32",
+        help="Dimensions des couches cachées, séparées par des virgules (par ex: 64,32)"
+    )
+    parser.add_argument(
+        "--activation",
+        type=str,
+        default="sigmoid",
+        choices=["relu", "sigmoid"],
+        help="Fonction d'activation à utiliser pour les couches cachées"
+    )
+    
     args = parser.parse_args()
     main(args)
