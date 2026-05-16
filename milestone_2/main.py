@@ -49,7 +49,6 @@ def main(args):
         val_features = train_features[val_idx]
         val_labels_reg = train_labels_reg[val_idx]
         val_labels_classif = train_labels_classif[val_idx]
-
         train_features = train_features[train_idx]
         train_labels_reg = train_labels_reg[train_idx]
         train_labels_classif = train_labels_classif[train_idx]
@@ -75,8 +74,7 @@ def main(args):
         method_obj = DummyClassifier(arg1=1, arg2=2)
 
     elif args.method == "kmeans":
-        ### WRITE YOUR CODE HERE
-        pass
+        method_obj = KMeans(K=args.K, max_iters=args.max_iters)
 
     elif args.method == "mlp":
         ### WRITE YOUR CODE HERE
@@ -106,7 +104,7 @@ def main(args):
         if args.method == "mlp":
             Y_train_oh = label_to_onehot(train_labels_classif)
 
-            print("entraînement du MLP en cours")
+            print("MLP training in progress...")
             method_obj.fit(train_features, Y_train_oh, loss=MSE, 
                            epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
 
@@ -115,13 +113,21 @@ def main(args):
             preds_oh = method_obj.predict(data_to_pred)
             
             preds = onehot_to_label(preds_oh)
-        
-        pass
+
+        elif args.method == "kmeans":
+            print("KMeans training in progress...")
+            method_obj.fit(train_features, train_labels_classif)
+
+            data_to_pred = test_features if args.test else val_features
+            preds = method_obj.predict(data_to_pred)
+
+        gt = test_labels_classif if args.test else val_labels_classif
+        split_name = "Test" if args.test else "Validation"
+        print(f"{split_name} accuracy: {accuracy_fn(preds, gt):.2f}%")
+        print(f"{split_name} F1: {macrof1_fn(preds, gt):.4f}")
 
     elif args.task == "regression":
         assert args.method != "kmeans", f"You should use kmeans as a classification method"
-
-        ### WRITE YOUR CODE HERE
 
     ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
 
@@ -149,7 +155,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--K",
         type=int,
-        default=1,
+        default=10,
         help="number of clusters datapoints used for kmeans",
     )
     parser.add_argument(
