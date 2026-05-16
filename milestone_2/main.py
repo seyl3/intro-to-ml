@@ -76,7 +76,7 @@ def main(args):
         method_obj = DummyClassifier(arg1=1, arg2=2)
 
     elif args.method == "kmeans":
-        method_obj = KMeans(K=args.K, max_iters=args.max_iters)
+        method_obj = KMeans(K=args.K, max_iters=args.max_iters, n_init=args.n_init)
 
     elif args.method == "mlp":
         ### WRITE YOUR CODE HERE
@@ -157,8 +157,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--K",
         type=int,
-        default=10,
+        default=3,
         help="number of clusters datapoints used for kmeans",
+    )
+    parser.add_argument(
+        "--n_init",
+        type=int,
+        default=1,
+        help="number of random restarts for kmeans; keeps the best run",
     )
     parser.add_argument(
         "--lr",

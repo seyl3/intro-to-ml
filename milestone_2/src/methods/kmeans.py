@@ -8,7 +8,7 @@ class KMeans(object):
     We also use it to make prediction by attributing labels to clusters.
     """
 
-    def __init__(self, K, max_iters=100):
+    def __init__(self, K, max_iters=100, n_init=1):
         """
         Initialize the new object (see dummy_methods.py)
         and set its arguments.
@@ -16,9 +16,11 @@ class KMeans(object):
         Arguments:
             K (int): number of clusters
             max_iters (int): maximum number of iterations
+            n_init (int): number of random restarts; keep the one with best train accuracy
         """
         self.K = K
         self.max_iters = max_iters
+        self.n_init = n_init
         self.centers = None
         self.cluster_center_label = None
 
@@ -157,11 +159,16 @@ class KMeans(object):
         Returns:
             pred_labels (array): labels of shape (N,)
         """
-        self.centers, cluster_assignments = self.k_means(training_data)
-        self.cluster_center_label = self.assign_labels_to_centers(
-            cluster_assignments, training_labels
-        )
-        return self.predict_with_centers(training_data)
+        best_acc, best_preds = -1, None
+        for _ in range(self.n_init):
+            centers, assignments = self.k_means(training_data)
+            labels = self.assign_labels_to_centers(assignments, training_labels)
+            preds = labels[assignments]
+            acc = np.mean(preds == training_labels)
+            if acc > best_acc:
+                best_acc, best_preds = acc, preds
+                self.centers, self.cluster_center_label = centers, labels
+        return best_preds
 
     def predict(self, test_data):
         """
