@@ -54,11 +54,13 @@ def main(args):
         train_labels_classif = train_labels_classif[train_idx]
 
     # Normalize features (fit on train, apply to others)
-    train_features, mean, std = normalize_fn(train_features)
-    test_features = (test_features - mean) / std
+    mean = train_features.mean(axis=0, keepdims=True)
+    std = train_features.std(axis=0, keepdims=True) + 1e-8
+    train_features = normalize_fn(train_features, mean, std)
+    test_features = normalize_fn(test_features, mean, std)
 
     if not args.test:
-        val_features = (val_features - mean) / std
+        val_features = normalize_fn(val_features, mean, std)
 
     # Add bias term
     train_features = append_bias_term(train_features)
