@@ -62,12 +62,13 @@ def main(args):
     if not args.test:
         val_features = normalize_fn(val_features, mean, std)
 
-    # Add bias term
-    train_features = append_bias_term(train_features)
-    test_features = append_bias_term(test_features)
+    # Add bias term (skip for KMeans: distance-based)
+    if args.method != "kmeans":
+        train_features = append_bias_term(train_features)
+        test_features = append_bias_term(test_features)
 
-    if not args.test:
-        val_features = append_bias_term(val_features)
+        if not args.test:
+            val_features = append_bias_term(val_features)
 
     ## 3. Initialize the method you want to use.
 
