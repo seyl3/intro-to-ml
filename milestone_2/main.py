@@ -183,7 +183,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--lr",
         type=float,
-        default=1e-5,
+        default=0.01,
         help="learning rate for methods with learning rate",
     )
     parser.add_argument(
@@ -202,13 +202,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mlp_dim",
         type=str,
-        default="64,32",
+        default="128,64",
         help="Dimensions des couches cachées, séparées par des virgules (par ex: 64,32)"
     )
     parser.add_argument(
         "--activation",
         type=str,
-        default="sigmoid",
+        default="relu",
         choices=["relu", "sigmoid"],
         help="Fonction d'activation à utiliser pour les couches cachées"
     )

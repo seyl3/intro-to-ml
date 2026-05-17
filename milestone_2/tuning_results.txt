@@ -1,0 +1,236 @@
+Résultat tuningn MLP
+
+Configuration: Task=classification | LR=0.01 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 69.69%
+Validation F1: 0.2738
+
+ ================ 
+Configuration: Task=classification | LR=0.01 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 67.19%
+Validation F1: 0.3517
+
+ ================ 
+Configuration: Task=classification | LR=0.01 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 69.69%
+Validation F1: 0.2738
+
+ ================ 
+Configuration: Task=classification | LR=0.01 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 77.81%
+Validation F1: 0.4648
+
+ ================ 
+Configuration: Task=classification | LR=0.01 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 69.69%
+Validation F1: 0.2738
+
+ ================ 
+Configuration: Task=classification | LR=0.01 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 69.69%
+Validation F1: 0.4336
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 15.31%
+Validation F1: 0.1460
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 22.50%
+Validation F1: 0.2162
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 25.31%
+Validation F1: 0.1347
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 33.44%
+Validation F1: 0.2798
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 66.25%
+Validation F1: 0.3583
+
+ ================ 
+Configuration: Task=classification | LR=0.001 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 44.69%
+Validation F1: 0.3070
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 8.75%
+Validation F1: 0.0894
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 16.56%
+Validation F1: 0.1593
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 25.31%
+Validation F1: 0.1347
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 23.75%
+Validation F1: 0.1853
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: sigmoid
+MLP training in progress...
+Validation accuracy: 60.00%
+Validation F1: 0.3498
+
+ ================ 
+Configuration: Task=classification | LR=0.0001 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 3) et activation: relu
+MLP training in progress...
+Validation accuracy: 35.62%
+Validation F1: 0.2697
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 8.2981
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 1.1248
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 8.2717
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 1.0467
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 8.3272
+
+ ================ 
+Configuration: Task=regression | LR=0.01 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 1.1122
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 8.7693
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 1.9977
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 8.6765
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 2.0238
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 9.1411
+
+ ================ 
+Configuration: Task=regression | LR=0.001 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 2.9992
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=64,32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 9.3823
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=64,32 | Act=relu
+Initialisation MLP avec dimensions: (14, 64, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 6.8435
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=128,64 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 10.0564
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=128,64 | Act=relu
+Initialisation MLP avec dimensions: (14, 128, 64, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 10.1001
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=32 | Act=sigmoid
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: sigmoid
+MLP regression training in progress...
+Validation MSE: 10.1632
+
+ ================ 
+Configuration: Task=regression | LR=0.0001 | Dims=32 | Act=relu
+Initialisation MLP avec dimensions: (14, 32, 1) et activation: relu
+MLP regression training in progress...
+Validation MSE: 9.6193
+
+ ================ 
