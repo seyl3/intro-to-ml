@@ -80,13 +80,11 @@ def main(args):
         method_obj = KMeans(K=args.K, max_iters=args.max_iters, n_init=args.n_init)
 
     elif args.method == "mlp":
-        ### WRITE YOUR CODE HERE
         n_features = train_features.shape[1]
-        n_classes = get_n_classes(train_labels_classif)
+        n_outputs = get_n_classes(train_labels_classif) if args.task == "classification" else 1
 
         hidden_layers = [int(x) for x in args.mlp_dim.split(',')]
-        
-        dimensions = (n_features, *hidden_layers, n_classes)
+        dimensions = (n_features, *hidden_layers, n_outputs)
 
         act_fn = ReLU if args.activation == "relu" else Sigmoid
         
@@ -131,6 +129,21 @@ def main(args):
 
     elif args.task == "regression":
         assert args.method != "kmeans", f"You should use kmeans as a classification method"
+        
+        if args.method == "mlp":
+            Y_train_reg = train_labels_reg.reshape(-1, 1)
+
+            print("MLP regression training in progress...")
+            method_obj.fit(train_features, Y_train_reg, loss=MSE, epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
+
+            data_to_pred = test_features if args.test else val_features
+            preds = method_obj.predict(data_to_pred)
+
+            gt = test_labels_reg if args.test else val_labels_reg
+            gt = gt.reshape(-1, 1)
+            
+            split_name = "Test" if args.test else "Validation"
+            print(f"{split_name} MSE: {mse_fn(preds, gt):.4f}")
 
     ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
 
