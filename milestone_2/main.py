@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import time
 
 from src.methods.dummy_methods import DummyClassifier
 from src.methods.mlp import MLP
@@ -106,14 +107,22 @@ def main(args):
             Y_train_oh = label_to_onehot(train_labels_classif)
 
             print("MLP training in progress...")
+            train_start = time.time()
             method_obj.fit(train_features, Y_train_oh, loss=MSE, 
                            epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
+            train_end = time.time()
 
             #choisit val ou test selon le flag --test
             data_to_pred = test_features if args.test else val_features
+            pred_start = time.time()
             preds_oh = method_obj.predict(data_to_pred)
+            pred_end = time.time()
             
             preds = onehot_to_label(preds_oh)
+            
+            print("=======================")
+            print(f"MLP training takes {(train_end - train_start) * 1000} ms")
+            print(f"MLP predicting takes {(pred_end - pred_start) * 1000} ms")
 
         elif args.method == "kmeans":
             print("KMeans training in progress...")
@@ -134,17 +143,23 @@ def main(args):
             Y_train_reg = train_labels_reg.reshape(-1, 1)
 
             print("MLP regression training in progress...")
+            train_start = time.time()
             method_obj.fit(train_features, Y_train_reg, loss=MSE, epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
+            train_end = time.time()
 
             data_to_pred = test_features if args.test else val_features
+            pred_start = time.time()
             preds = method_obj.predict(data_to_pred)
+            pred_end = time.time()
 
             gt = test_labels_reg if args.test else val_labels_reg
             gt = gt.reshape(-1, 1)
             
             split_name = "Test" if args.test else "Validation"
             print(f"{split_name} MSE: {mse_fn(preds, gt):.4f}")
-
+            print("=======================")
+            print(f"MLP training takes {(train_end - train_start) * 1000} ms")
+            print(f"MLP predicting takes {(pred_end - pred_start) * 1000} ms")
     ### WRITE YOUR CODE HERE if you want to add other outputs, visualization, etc.
 
 
