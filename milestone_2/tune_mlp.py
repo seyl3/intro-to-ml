@@ -1,15 +1,15 @@
 import subprocess
 
-#grilles d'hyperparamètres à tester
+# Hyperparameter grids to test
 tasks = ["classification", "regression"]
 learning_rates = [1e-2, 1e-3, 1e-4]
 architectures = ["64,32", "128,64", "32"]
 activations = ["sigmoid", "relu"]
 
-print("Début de la recherche automatique des meilleurs hyperparamètres")
+print("Starting automatic grid search for best hyperparameters")
 
 with open("tuning_results.txt", "w", encoding="utf-8") as f:
-    f.write("Résultat tuningn MLP\n\n")
+    f.write("MLP Tuning Results\n\n")
 
 for task in tasks:
     for lr in learning_rates:
@@ -34,7 +34,7 @@ for task in tasks:
                     f.write(f"\nConfiguration: Task={task} | LR={lr} | Dims={arch} | Act={act}\n")
                     f.write(result.stdout)
                     if result.stderr:
-                        f.write(f"Erreur")
+                        f.write(f"Error")
                     f.write("\n ================ \n")
 
-print("\nFinit !!")
+print("\nFinished !!")

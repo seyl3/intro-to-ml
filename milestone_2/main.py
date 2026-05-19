@@ -22,7 +22,6 @@ def main(args):
                           of this file). Their value can be accessed as "args.argument".
     """
 
-
     dataset_path = args.data_path
     if not os.path.exists(dataset_path):
         raise FileNotFoundError(f"Dataset not found at {dataset_path}")
@@ -91,7 +90,7 @@ def main(args):
         
         activations = [act_fn] * (len(dimensions) - 1)
 
-        print(f"Initialisation MLP avec dimensions: {dimensions} et activation: {args.activation}")
+        print(f"MLP initialization with dimensions: {dimensions} and activation: {args.activation}")
         method_obj = MLP(dimensions=dimensions, activations=activations)
         
         pass
@@ -112,7 +111,7 @@ def main(args):
                            epochs=args.max_iters, batch_size=16, learning_rate=args.lr)
             train_end = time.time()
 
-            #choisit val ou test selon le flag --test
+            # choose val or test depending on the --test flag
             data_to_pred = test_features if args.test else val_features
             pred_start = time.time()
             preds_oh = method_obj.predict(data_to_pred)
@@ -218,14 +217,14 @@ if __name__ == "__main__":
         "--mlp_dim",
         type=str,
         default="128,64",
-        help="Dimensions des couches cachées, séparées par des virgules (par ex: 64,32)"
+        help="Dimensions of hidden layers, separated by commas (e.g., 64,32)"
     )
     parser.add_argument(
         "--activation",
         type=str,
         default="relu",
         choices=["relu", "sigmoid"],
-        help="Fonction d'activation à utiliser pour les couches cachées"
+        help="Activation function to use for hidden layers"
     )
     
     args = parser.parse_args()

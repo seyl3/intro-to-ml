@@ -24,16 +24,16 @@ class MLP:
         self.weights = []
         self.biases = []
         
-        # pour créer les connexions
+        # to create the connections
         for i in range(len(dimensions) - 1):
             n_in = dimensions[i]
             n_out = dimensions[i+1]
             
-            # initialisation aléatoire des poids
+            # random initialization of weights
             w = np.random.randn(n_in, n_out) * np.sqrt(1.0 / n_in)
             self.weights.append(w)
             
-            # un biais par neurone de sortie
+            # one bias per output neuron
             b = np.zeros((1, n_out))
             self.biases.append(b)
 
@@ -46,13 +46,13 @@ class MLP:
 
         ### WRITE YOUR CODE HERE
         
-         # couche 0 -> données d'entrée
+        # layer 0 -> input data
         a = {0: x}
         z = {}
 
-        # parcourt de chaque transition entre les couches
+        # loop through each transition between layers
         for i in range(len(self.weights)):
-            # pré-activation
+            # pre-activation
             z[i+1] = a[i] @ self.weights[i] + self.biases[i]
             
             # activation
@@ -71,7 +71,7 @@ class MLP:
         
         _, activations = self.feed_forward(x)
         
-        # renvoie de la dernière couche uniquement
+        # return the last layer only
         return activations[len(self.weights)]
 
 
@@ -96,15 +96,15 @@ class MLP:
         deltas = {}
         L = len(self.weights)
         
-        # erreur à la sortie
+        # error at the output
         output_pred = a[L]
         deltas[L] = loss.gradient(y_true, output_pred) * self.activations[L-1].gradient(z[L])
 
-        # rétropropagation de l'erreur dans les couches cachées
+        # backpropagation of the error through the hidden layers
         for i in range(L - 1, 0, -1):
             deltas[i] = (deltas[i+1] @ self.weights[i].T) * self.activations[i-1].gradient(z[i])
 
-        # Calcul des gradients dw et db pondérés par la taille du batch
+        # Compute gradients dw and db weighted by the batch size
         for i in range(L):
             dw[i] = (a[i].T @ deltas[i+1]) / a[i].shape[0]
             db[i] = np.mean(deltas[i+1], axis=0, keepdims=True)
@@ -144,17 +144,17 @@ class MLP:
             x_shuffled = x[indices]
             y_shuffled = y_true[indices]
             
-            # parcours par mini batch
+            # loop through mini-batches
             for i in range(0, n_samples, batch_size):
                 x_batch = x_shuffled[i:i + batch_size]
                 y_batch = y_shuffled[i:i + batch_size]
                 
-                # calcul des activations
+                # compute activations
                 z, a = self.feed_forward(x_batch)
                 
-                # calcul des gradients
+                # compute gradients
                 dw, db = self.back_prop(z, a, y_batch, loss)
                 
-                # Mise à jour de chaque couche
+                # update each layer
                 for layer_idx in range(len(self.weights)):
                     self.update_w_b(layer_idx, dw[layer_idx], db[layer_idx], learning_rate)

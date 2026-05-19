@@ -3,3 +3,6 @@
 .venv
 __pycache__/
 *.pyc
+
+# MLP tuning results
+milestone_2/tuning_results.txt
